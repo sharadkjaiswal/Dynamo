@@ -785,11 +785,8 @@ namespace ProtoFFI
                     var lhs = paramNode.NameNode;
 
                     var defaultValue = parameter.DefaultValue;
-                    if (defaultValue != null)
-                    {
-                        var rhs = AstFactory.BuildPrimitiveNodeFromObject(defaultValue);
-                        paramNode.NameNode = AstFactory.BuildBinaryExpression(lhs, rhs, ProtoCore.DSASM.Operator.assign);
-                    }
+                    var rhs = AstFactory.BuildPrimitiveNodeFromObject(defaultValue);
+                    paramNode.NameNode = AstFactory.BuildBinaryExpression(lhs, rhs, ProtoCore.DSASM.Operator.assign);
                 }
                 argumentSignature.AddArgument(paramNode);
             }

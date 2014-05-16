@@ -479,6 +479,15 @@ namespace FFITarget
             return x;
         }
     }
+
+    public class NullableArgumentTest
+    {
+        public static int GetValue(int? value = null)
+        {
+            return value == null ? -1 : value.Value;
+        }
+    }
+
     public class MethodOverloadingClass
     {
         float f = 1.5F;

@@ -300,5 +300,25 @@ namespace ProtoFFITests
 
             theTest.Verify("b", new List<object> { new string[] { "A", "B", "C", "D" }, new int[] { 1, 2, 3, 4 } });
         }
+
+        [Test]
+        public void TestDefaultValueOnNullableArgument()
+        {
+            string code = @"                import(NullableArgumentTest from ""FFITarget.dll"");                a = NullableArgumentTest.GetValue();                b = NullableArgumentTest.GetValue(5);                ";
+
+            theTest.RunScriptSource(code);
+            var methods = theTest.GetMethods("NullableArgumentTest", "GetValue");
+
+            //Nullable type int? is migrated as int.
+            var args = methods[0].GetArgumentTypes();
+            Assert.AreEqual((int)ProtoCore.PrimitiveType.kTypeInt, args[0].UID);
+
+            //Return type is int.
+            Assert.AreEqual((int)ProtoCore.PrimitiveType.kTypeInt, methods[0].ReturnType.Value.UID);
+            Assert.AreEqual(Constants.kArbitraryRank, methods[0].ReturnType.Value.rank);
+
+            theTest.Verify("a", -1);
+            theTest.Verify("b", 5);
+        }
     }
 }
