@@ -178,6 +178,7 @@ namespace Dynamo.ViewModels
         public DelegateCommand CancelRunCommand { get; set; }
         public DelegateCommand RunExpressionCommand { get; set; }
         public DelegateCommand ForceRunExpressionCommand { get; set; }
+        public DelegateCommand MutateTestDelegateCommand { get; set; }
         public DelegateCommand DisplayFunctionCommand { get; set; }
         public DelegateCommand SetConnectorTypeCommand { get; set; }
         public DelegateCommand ReportABugCommand { get; set; }
@@ -203,6 +204,7 @@ namespace Dynamo.ViewModels
         public DelegateCommand ShowAboutWindowCommand { get; set; }
         public DelegateCommand CheckForUpdateCommand { get; set; }
         public DelegateCommand SetNumberFormatCommand { get; set; }
+        public DelegateCommand OpenRecentCommand { get; set; }
 
         public DelegateCommand SelectVisualizationInViewCommand { get; set; }
         public DelegateCommand GetBranchVisualizationCommand { get; set; }
@@ -475,6 +477,18 @@ namespace Dynamo.ViewModels
             }
         }
 
+        private ObservableCollection<string> recentFiles =
+            new ObservableCollection<string>();
+        public ObservableCollection<string> RecentFiles
+        {
+            get { return recentFiles; }
+            set
+            {
+                recentFiles = value;
+                RaisePropertyChanged("RecentFiles");
+            }
+        }
+
         //public bool AlternateDrawingContextAvailable
         //{
         //    get { return dynSettings.Controller.VisualizationManager.AlternateDrawingContextAvailable; }
@@ -522,27 +536,36 @@ namespace Dynamo.ViewModels
             }
         }
 
-        public int MaxGridLines
+        public int MaxTesselationDivisions
         {
-            get { return Controller.VisualizationManager.MaxGridLines; }
+            get { return Controller.VisualizationManager.MaxTesselationDivisions; }
             set
             {
-                Controller.VisualizationManager.MaxGridLines = value;
+                Controller.VisualizationManager.MaxTesselationDivisions = value;
                 Controller.OnRequestsRedraw(this, EventArgs.Empty);
             }
         }
 
-        public bool IsDebugBuild
+        public bool VerboseLogging
         {
-            get
+            get { return Controller.DebugSettings.VerboseLogging; }
+            set
             {
-#if DEBUG
-                return true;
-#else
-                return false;
-#endif
+                Controller.DebugSettings.VerboseLogging = value;
+                RaisePropertyChanged("VerboseLogging");
             }
         }
+
+        public bool ShowDebugASTs
+        {
+            get { return IsDebugBuild && dynSettings.Controller.DebugSettings.ShowDebugASTs; }
+            set
+            {
+                Controller.DebugSettings.ShowDebugASTs = value;
+                RaisePropertyChanged("ShowDebugASTs");
+            }
+        }
+
         #endregion
 
         public DynamoViewModel(DynamoController controller, string commandFilePath)
@@ -599,7 +622,7 @@ namespace Dynamo.ViewModels
             CancelRunCommand = new DelegateCommand(Controller.CancelRunCmd, Controller.CanCancelRunCmd);
             RunExpressionCommand = new DelegateCommand(Controller.RunExprCmd, Controller.CanRunExprCmd);
             ForceRunExpressionCommand = new DelegateCommand(Controller.ForceRunExprCmd, Controller.CanRunExprCmd);
-
+            MutateTestDelegateCommand = new DelegateCommand(Controller.MutateTestCmd, Controller.CanRunExprCmd);
             DisplayFunctionCommand = new DelegateCommand(Controller.DisplayFunction, Controller.CanDisplayFunction);
             SetConnectorTypeCommand = new DelegateCommand(SetConnectorType, CanSetConnectorType);
             ReportABugCommand = new DelegateCommand(Controller.ReportABug, Controller.CanReportABug);
@@ -626,6 +649,7 @@ namespace Dynamo.ViewModels
             ShowAboutWindowCommand = new DelegateCommand(ShowAboutWindow, CanShowAboutWindow);
             CheckForUpdateCommand = new DelegateCommand(CheckForUpdate, CanCheckForUpdate);
             SetNumberFormatCommand = new DelegateCommand(SetNumberFormat, CanSetNumberFormat);
+            OpenRecentCommand = new DelegateCommand(OpenRecent, CanOpenRecent);
 
             SelectVisualizationInViewCommand = new DelegateCommand(SelectVisualizationInView, CanSelectVisualizationInView);
             GetBranchVisualizationCommand = new DelegateCommand(GetBranchVisualization, CanGetBranchVisualization);
@@ -653,9 +677,16 @@ namespace Dynamo.ViewModels
                 }
             };
 
+            this.RecentFiles = new ObservableCollection<string>( Controller.PreferenceSettings.RecentFiles );
+            this.RecentFiles.CollectionChanged += (sender, args) =>
+            {
+                Controller.PreferenceSettings.RecentFiles = this.RecentFiles.ToList();
+            };
+
             UsageReportingManager.Instance.PropertyChanged += CollectInfoManager_PropertyChanged;
 
             WatchIsResizable = false;
+            
         }
 
         void Instance_UpdateDownloaded(object sender, UpdateManager.UpdateDownloadedEventArgs e)
@@ -755,6 +786,23 @@ namespace Dynamo.ViewModels
             RaisePropertyChanged("Workspaces");
         }
 
+        internal void AddToRecentFiles(string path)
+        {
+            if (path == null) return;
+
+            if (RecentFiles.Contains(path))
+            {
+                RecentFiles.Remove(path);
+            }
+
+            RecentFiles.Insert(0, path);
+
+            if (RecentFiles.Count > Controller.PreferenceSettings.MaxNumRecentFiles)
+            {
+                RecentFiles = new ObservableCollection<string>(RecentFiles.Take(Controller.PreferenceSettings.MaxNumRecentFiles));
+            }
+        }
+
         public FileDialog GetSaveDialog(WorkspaceModel workspace)
         {
             FileDialog fileDialog = new SaveFileDialog
@@ -781,6 +829,17 @@ namespace Dynamo.ViewModels
             fileDialog.Filter = fltr;
 
             return fileDialog;
+        }
+
+        public void OpenRecent(object path)
+        {
+            var p = path as string;
+            this.Model.Open(p);
+        }
+
+        public bool CanOpenRecent(object path)
+        {
+            return true;
         }
 
         public virtual bool RunInDebug

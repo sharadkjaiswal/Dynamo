@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using Dynamo.Interfaces;
 using Dynamo.UpdateManager;
 using Dynamo.Utilities;
@@ -59,9 +61,12 @@ namespace Dynamo.Tests
 
             var updateManager = new UpdateManager.UpdateManager(logger);
 
+            var corePath =
+                    Path.GetFullPath(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+
             ////create a new instance of the ViewModel
             Controller = new DynamoController(Context.NONE, updateManager,
-                new DefaultWatchHandler(), new PreferenceSettings());
+                new DefaultWatchHandler(), new PreferenceSettings(), corePath);
             DynamoController.IsTestMode = true;
             Controller.DynamoViewModel = new DynamoViewModel(Controller, null);
             Controller.VisualizationManager = new VisualizationManager();   
@@ -76,8 +81,11 @@ namespace Dynamo.Tests
         /// <param name="visualizationManager"></param>
         protected void StartDynamo(IUpdateManager updateManager, IWatchHandler watchHandler, IPreferences preferences, IVisualizationManager visualizationManager)
         {
+            var corePath =
+                    Path.GetFullPath(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+
             //create a new instance of the ViewModel
-            Controller = new DynamoController(Context.NONE, updateManager, watchHandler, preferences);
+            Controller = new DynamoController(Context.NONE, updateManager, watchHandler, preferences, corePath);
             Controller.DynamoViewModel = new DynamoViewModel(Controller, null);
             DynamoController.IsTestMode = true;
             Controller.VisualizationManager = new VisualizationManager();
@@ -112,10 +120,17 @@ namespace Dynamo.Tests
         {
             var nodes = Controller.DynamoModel.Nodes;
 
-            double dummyNodesCount = nodes.OfType<DSCoreNodesUI.DummyNode>().Count();
+            var dummyNodes = nodes.OfType<DSCoreNodesUI.DummyNode>();
+            string logs = string.Empty;
+            foreach (var node in dummyNodes)
+            {
+                logs += string.Format("{0} is a {1} node\n", node.NickName, node.NodeNature);
+            }
+
+            double dummyNodesCount = dummyNodes.Count();
             if (dummyNodesCount >= 1)
             {
-                Assert.Fail("Number of dummy nodes found in Sample: " + dummyNodesCount);
+                Assert.Fail(logs + "Number of dummy nodes found in Sample: " + dummyNodesCount);
             }
         }
 
