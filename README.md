@@ -5,6 +5,9 @@
 ## Description ##
 Dynamo extends the parametric functionality of Autodesk Revit. Dynamo aims to be accessible to both non-programmers and the programmers alike with the ability to visually script behavior, define custom nodes, and script using Python.
 
+## Build Status ##
+![BuildStatus](http://dynamobim.com/app/display.php/?buildstatus=1&teststatus=1&coverage=1)
+
 ## Contributors ##
 
 * [Ian Keough](https://github.com/ikeough): Started the project, main developer.
