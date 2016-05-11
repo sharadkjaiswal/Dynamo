@@ -131,6 +131,7 @@ namespace Dynamo.Wpf.Extensions
         View,
         Help,
         Packages
+        Settings
     }
 
 }
