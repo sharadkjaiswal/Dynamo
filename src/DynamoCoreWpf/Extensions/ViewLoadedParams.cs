@@ -130,7 +130,7 @@ namespace Dynamo.Wpf.Extensions
         Edit,
         View,
         Help,
-        Packages
+        Packages,
         Settings
     }
 
