@@ -1,6 +1,17 @@
-﻿using Dynamo.Models;
-using Dynamo.PackageManager;
+﻿using System;
+using System.IO;
+using System.Reflection;
+using System.Windows.Controls;
+using CefSharp;
+using CefSharp.Wpf;
+using Dynamo.LibraryUI.ViewModels;
+using Dynamo.LibraryUI.Views;
 using Dynamo.Wpf.Extensions;
+using Dynamo.PackageManager;
+using Dynamo.Models;
+using System.Linq;
+using Dynamo.Controls;
+using Dynamo.ViewModels;
 using Dynamo.Wpf.Interfaces;
 
 namespace Dynamo.LibraryUI
@@ -37,6 +48,7 @@ namespace Dynamo.LibraryUI
                 viewLoadedParams = p;
                 controller = new LibraryViewController(p.DynamoWindow, p.CommandExecutive, customization);
                 controller.AddLibraryView();
+                //controller.ShowDetailsView("583d8ad8fdef23aa6e000037");
             }
         }
 
