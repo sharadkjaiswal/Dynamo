@@ -27,3 +27,4 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("Dynamo.Storage")]
 [assembly: InternalsVisibleTo("LibraryViewExtension")]
 [assembly: InternalsVisibleTo("ViewExtensionLibraryTests")]
+[assembly: InternalsVisibleTo("Helix3DViewExtension")]

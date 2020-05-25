@@ -76,7 +76,7 @@ namespace Dynamo.Controls
 
         private readonly DispatcherTimer _workspaceResizeTimer = new DispatcherTimer { Interval = new TimeSpan(0, 0, 0, 0, 500), IsEnabled = false };
 
-        internal Watch3DView BackgroundPreview { get; private set; }
+        internal UserControl BackgroundPreview { get; private set; }
 
         public DynamoView(DynamoViewModel dynamoViewModel)
         {

@@ -47,7 +47,7 @@ namespace Dynamo.Wpf.Extensions
         /// </summary>
         public IRenderPackageFactory RenderPackageFactory
         {
-            get { return dynamoViewModel.RenderPackageFactoryViewModel.Factory; }
+            get { return null; }// dynamoViewModel.RenderPackageFactoryViewModel.Factory; }
         }
 
         /// <summary>

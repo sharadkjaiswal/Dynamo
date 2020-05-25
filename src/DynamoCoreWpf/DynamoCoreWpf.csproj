@@ -178,13 +178,11 @@
     <Compile Include="Interfaces\LayoutSpecification.cs" />
     <Compile Include="Utilities\CompactBubbleHandler.cs" />
     <Compile Include="Interfaces\IShellCom.cs" />
-    <Compile Include="Rendering\HelixRenderPackage.cs" />
     <Compile Include="Interfaces\IBrandingResourceProvider.cs" />
     <Compile Include="NodeViewCustomization\AssemblyNodeViewCustomizations.cs" />
     <Compile Include="NodeViewCustomization\CoreNodeViewCustomizations.cs" />
     <Compile Include="NodeViewCustomization\NodeViewCustomizationLoader.cs" />
     <Compile Include="NodeViewCustomization\NodeViewCustomizations.cs" />
-    <Compile Include="Rendering\RenderPackageExtensions.cs" />
     <Compile Include="Services\IconServices.cs" />
     <Compile Include="UI\ClassObjectTemplateSelector.cs" />
     <Compile Include="UI\DraggedAdorner.cs" />
@@ -310,7 +308,6 @@
     <Compile Include="ViewModels\Search\ClassInformationViewModel.cs" />
     <Compile Include="NodeViewCustomization\NodeViewCustomizations\SymbolViewCustomization.cs" />
     <Compile Include="NodeViewCustomization\NodeViewCustomizations\VariableInputNodeViewCustomization.cs" />
-    <Compile Include="ViewModels\RenderPackageFactoryViewModel.cs" />
     <Compile Include="ViewModels\Search\SearchCategory.cs" />
     <Compile Include="ViewModels\Watch3D\DynamoGeometryModel3D.cs" />
     <Compile Include="ViewModels\Watch3D\DynamoLineGeometryModel3D.cs" />
@@ -385,9 +382,6 @@
     </Compile>
     <Compile Include="Controls\TooltipWindow.xaml.cs">
       <DependentUpon>TooltipWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Preview\Watch3DView.xaml.cs">
-      <DependentUpon>Watch3DView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Preview\WatchTree.xaml.cs">
       <DependentUpon>WatchTree.xaml</DependentUpon>
@@ -1183,10 +1177,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\TooltipWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\Preview\Watch3DView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

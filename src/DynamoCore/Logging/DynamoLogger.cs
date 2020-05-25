@@ -164,7 +164,7 @@ namespace Dynamo.Logging
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="level">The level.</param>
-        internal void Log(string message, LogLevel level)
+        public void Log(string message, LogLevel level)
         {
             Log(message, level, true);
         }

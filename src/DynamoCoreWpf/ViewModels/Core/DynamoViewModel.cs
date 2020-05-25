@@ -437,8 +437,6 @@ namespace Dynamo.ViewModels
             }
         }
 
-        public RenderPackageFactoryViewModel RenderPackageFactoryViewModel { get; set; }
-
         public bool EnablePresetOptions
         {
             get { return this.Model.CurrentWorkspace.Presets.Any(); }            
@@ -493,14 +491,14 @@ namespace Dynamo.ViewModels
             if(startConfiguration.WatchHandler == null)
                 startConfiguration.WatchHandler = new DefaultWatchHandler(startConfiguration.DynamoModel.PreferenceSettings);
 
-            if (startConfiguration.Watch3DViewModel == null)
-            {
-                startConfiguration.Watch3DViewModel = 
-                    HelixWatch3DViewModel.TryCreateHelixWatch3DViewModel(
-                        null,
-                        new Watch3DViewModelStartupParams(startConfiguration.DynamoModel), 
-                        startConfiguration.DynamoModel.Logger);
-            }
+            //if (startConfiguration.Watch3DViewModel == null)
+            //{
+            //    startConfiguration.Watch3DViewModel = 
+            //        HelixWatch3DViewModel.TryCreateHelixWatch3DViewModel(
+            //            null,
+            //            new Watch3DViewModelStartupParams(startConfiguration.DynamoModel), 
+            //            startConfiguration.DynamoModel.Logger);
+            //}
 
             return new DynamoViewModel(startConfiguration);
         }
@@ -557,13 +555,13 @@ namespace Dynamo.ViewModels
 
             SubscribeDispatcherHandlers();
 
-            RenderPackageFactoryViewModel = new RenderPackageFactoryViewModel(Model.PreferenceSettings);
-            RenderPackageFactoryViewModel.PropertyChanged += RenderPackageFactoryViewModel_PropertyChanged;
+            //RenderPackageFactoryViewModel = new RenderPackageFactoryViewModel(Model.PreferenceSettings);
+            //RenderPackageFactoryViewModel.PropertyChanged += RenderPackageFactoryViewModel_PropertyChanged;
 
             BackgroundPreviewViewModel = startConfiguration.Watch3DViewModel;
             BackgroundPreviewViewModel.PropertyChanged += Watch3DViewModelPropertyChanged;
             WatchHandler.RequestSelectGeometry += BackgroundPreviewViewModel.AddLabelForPath;
-            RegisterWatch3DViewModel(BackgroundPreviewViewModel, RenderPackageFactoryViewModel.Factory);
+            //RegisterWatch3DViewModel(BackgroundPreviewViewModel, RenderPackageFactoryViewModel.Factory);
             model.ComputeModelDeserialized += model_ComputeModelDeserialized;
         }
 
@@ -582,23 +580,23 @@ namespace Dynamo.ViewModels
             RaisePropertyChanged("Watch3DViewModels");
         }
 
-        private void RenderPackageFactoryViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            switch (e.PropertyName)
-            {
-                case "ShowEdges":
-                    var factoryVm = (RenderPackageFactoryViewModel)sender;
-                    model.PreferenceSettings.ShowEdges = factoryVm.Factory.TessellationParameters.ShowEdges;
-                    // A full regeneration is required to get the edge geometry.
-                    foreach (var vm in Watch3DViewModels)
-                    {
-                        vm.RegenerateAllPackages();
-                    }
-                    break;
-                default:
-                    return;
-            }
-        }
+        //private void RenderPackageFactoryViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        //{
+        //    switch (e.PropertyName)
+        //    {
+        //        case "ShowEdges":
+        //            var factoryVm = (RenderPackageFactoryViewModel)sender;
+        //            model.PreferenceSettings.ShowEdges = factoryVm.Factory.TessellationParameters.ShowEdges;
+        //            // A full regeneration is required to get the edge geometry.
+        //            foreach (var vm in Watch3DViewModels)
+        //            {
+        //                vm.RegenerateAllPackages();
+        //            }
+        //            break;
+        //        default:
+        //            return;
+        //    }
+        //}
 
         void Watch3DViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
